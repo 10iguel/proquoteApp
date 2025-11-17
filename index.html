@@ -1,1 +1,125 @@
-<h1>placeholder</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Quote Generator</title>
+    <style>
+        /* Modern Styling and Centering */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5; /* Light, soft background */
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers the controls (button and quote) */
+            gap: 40px; /* Space between elements */
+        }
+
+        #quote-display {
+            /* Fulfills the 75% viewport width requirement */
+            max-width: 75vw;
+            min-height: 50px;
+            font-size: 1.6em;
+            color: #333;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Subtle, modern shadow */
+            border-left: 6px solid #007bff; /* Primary color accent */
+            line-height: 1.5;
+            font-style: italic;
+            transition: all 0.3s ease-in-out;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            background-color: #007bff; /* Primary color */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Inspirational Quote</h1>
+        <button id="fetch-quote-btn">Get A New Quote</button>
+        <div id="quote-display">
+            Click the button to fetch a quote!
+        </div>
+    </div>
+
+    <script>
+        const button = document.getElementById('fetch-quote-btn');
+        const quoteDisplay = document.getElementById('quote-display');
+        const apiURL = 'https://quote.cs260.click/';
+
+        /**
+         * Fetches a quote from the specified API endpoint and updates the display.
+         */
+        async function fetchQuote() {
+            // Display a loading state while fetching
+            quoteDisplay.textContent = 'Loading a deep thought...';
+            quoteDisplay.style.opacity = '0.5';
+            
+            try {
+                const response = await fetch(apiURL);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // The API returns the quote as simple plain text
+                const quoteText = await response.text();
+
+                // Update the display with the new quote
+                quoteDisplay.textContent = quoteText.trim();
+
+            } catch (error) {
+                console.error('Error fetching quote:', error);
+                quoteDisplay.textContent = 'Sorry, failed to connect to the quote server.';
+            } finally {
+                // Restore full opacity after fetch attempt
+                quoteDisplay.style.opacity = '1';
+            }
+        }
+
+        // Add the click listener to the button
+        button.addEventListener('click', fetchQuote);
+
+        // Optional: Fetch a quote immediately when the page loads
+        fetchQuote();
+    </script>
+
+</body>
+</html>
